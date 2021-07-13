@@ -1,5 +1,6 @@
 const Accounts = require('./accounts-model')
 
+
 exports.checkAccountPayload = (req, res, next) => {
     const { name, budget } = req.body
     if (name === undefined || name === null ||
