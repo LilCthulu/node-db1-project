@@ -15,7 +15,7 @@ router.get('/:id', checkAccountId, (req, res, next) => {
 })
 
 router.post('/', checkAccountPayload, checkAccountNameUnique, (req, res, next) => {
-    Accounts.insert(req.body)
+    Accounts.create(req.body)
         .then((newAccount) => {
             res.status(201).json(newAccount)
         })
