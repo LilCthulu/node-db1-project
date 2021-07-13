@@ -29,40 +29,43 @@ exports.checkAccountPayload = (req, res, next) => {
 }
 
 exports.checkAccountNameUnique = async(req, res, next) => {
-        try {
-            const name = req.body.name
-            const existingName = await Accounts.getAll().name
-            if (name === existingName.map()) {
+    try {
+        const existingName = await Accounts.getAll().name
+        existingName.forEach(names => {
+            const newName = req.body.name
+            if (newName === names) {
                 res.status(400).json({
                     message: "that name is taken"
                 })
-            }
-        } catch {
+            } else { req.name = newName }
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
+exports.checkAccountId = async(req, res, next) => {
+    try {
+        const account = await Accounts.getById(req.params.id)
+        if (!account) {
+            res.status(404).json({
+                message: 'account not found'
+            })
+        } else {
+            req.account = account
             next()
         }
+    } catch {
+        res.status(500).json({
+            message: 'problem finding account'
+        })
+    }
+}
 
-        exports.checkAccountId = async(req, res, next) => {
-            try {
-                const account = await Accounts.getById(req.params.id)
-                if (!account) {
-                    res.status(404).json({
-                        message: 'account not found'
-                    })
-                } else {
-                    req.account = account
-                    next()
-                }
-            } catch {
-                res.status(500).json({
-                    message: 'problem finding account'
-                })
-            }
-        }
-
-        exports.logger = (req, res, next) => {
-            const timestamp = new Date().toLocaleString()
-            const method = req.method
-            const url = req.originalUrl
-            console.log(`${timestamp} ${method} ${url}`)
-            next()
-        };
+exports.logger = (req, res, next) => {
+    const timestamp = new Date().toLocaleString()
+    const method = req.method
+    const url = req.originalUrl
+    console.log(`${timestamp} ${method} ${url}`)
+    next()
+}

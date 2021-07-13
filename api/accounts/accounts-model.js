@@ -1,24 +1,29 @@
 const getAll = () => {
-    // DO YOUR MAGIC
+    const accounts = await db('accounts')
+    console.log(accounts)
+    return accounts
 }
 
 const getById = id => {
-    // DO YOUR MAGIC
+    const accounts = await db('accounts').where('id', id).first()
+    return accounts
 }
 
 const create = account => {
-    // DO YOUR MAGIC
+    return db('actions')
+        .insert(account)
+        .then(([id]) => getById(id));
 }
 
 const updateById = (id, account) => {
     return db('accounts')
         .where('id', id)
         .update(account)
-        .then((count) => (count > 0 ? get(id) : null));
+        .then((count) => (count > 0 ? getById(id) : null));
 }
 
 const deleteById = id => {
-    // DO YOUR MAGIC
+    return db('accounts').where('id', id).del();
 }
 
 module.exports = {
